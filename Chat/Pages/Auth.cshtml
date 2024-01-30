@@ -1,0 +1,269 @@
+﻿@page
+@model Chat.Pages.AuthModel
+@Html.AntiForgeryToken()
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Giriş</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            width: 100%;
+            background: #009579;
+        }
+
+        #rememberMe {
+            width: 20px;
+            -webkit-appearance: checkbox;
+            -moz-appearance: checkbox;
+            appearance: checkbox;
+            margin-top: 15px;
+        }
+
+        #divCheckBox {
+            display: flex;
+            align-items: center; /* Align items vertically in the center */
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            max-width: 430px;
+            width: 100%;
+            background: #fff;
+            border-radius: 7px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+        }
+
+            .container .registration {
+                display: none;
+            }
+
+        #check:checked ~ .registration {
+            display: block;
+        }
+
+        #check:checked ~ .login {
+            display: none;
+        }
+
+        #check {
+            display: none;
+        }
+
+        .container .form {
+            padding: 2rem;
+        }
+
+        .form header {
+            font-size: 2rem;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form input {
+            height: 60px;
+            width: 100%;
+            padding: 0 15px;
+            font-size: 17px;
+            margin-bottom: 1.3rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+        }
+
+            .form input:focus {
+                box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+            }
+
+        .form a {
+            font-size: 16px;
+            color: #009579;
+            text-decoration: none;
+        }
+
+            .form a:hover {
+                text-decoration: underline;
+            }
+
+        .form input.button {
+            color: #fff;
+            background: #009579;
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-top: 1.7rem;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+            .form input.button:hover {
+                background: #006653;
+            }
+
+        .signup {
+            font-size: 17px;
+            text-align: center;
+        }
+
+            .signup label {
+                color: #009579;
+                cursor: pointer;
+            }
+
+                .signup label:hover {
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <input type="checkbox" id="check">
+        <div class="login form">
+            <header>Login</header>
+            <form action="#">
+                <input type="text" placeholder="Enter your username" id="inputUsername">
+                <input type="password" placeholder="Enter your password" id="inputPassword">
+                <div id="divCheckBox">
+                    <input type="checkbox" value="lsRememberMe" id="rememberMe"> <label for="rememberMe" style="padding:5px">Beni hatırla</label>
+                </div>
+                <a href="#">Forgot password?</a>
+                <input id="buttonLgn" type="button" class="button" value="Login">
+            </form>
+            <div class="signup">
+                <span class="signup">
+                    Don't have an account?
+                    <label for="check">Signup</label>
+                </span>
+            </div>
+        </div>
+        <div class="registration form">
+            <header>Signup</header>
+            <form action="#">
+                <input id="registerUsername" type="text" placeholder="Enter your username">
+                <input id="registerPass" type="password" placeholder="Create a password">
+                <input id="registerPass2" type="password" placeholder="Confirm your password">
+                <input type="file" id="fileInput" accept="image/*" />
+                <input id="buttonRgstr" type="button" class="button" value="Signup">
+            </form>
+            <div class="signup">
+                <span class="signup">
+                    Already have an account?
+                    <label for="check">Login</label>
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    <script>
+        //Javascript code
+
+        //sayfa yüklendiğinde bu kod çalışacak
+        window.onload = function () {
+            var rememberedUsername = localStorage.getItem('username');
+            var rememberedPassword = localStorage.getItem('password');
+
+            if (rememberedUsername && rememberedPassword) {
+                // eğer cookilerde username ve password varsa onları html e gönderiyoruz
+                document.getElementById('inputUsername').value = rememberedUsername;
+                document.getElementById('inputPassword').value = rememberedPassword;
+                document.getElementById('rememberMe').checked = true;
+            }
+        };
+
+        var buttonLgn = document.getElementById('buttonLgn');
+        //Burda login butonumuzu dinliyoruz
+        buttonLgn.addEventListener('click', function () { 
+            //burda username ve passwordu alıyoruz userin girdiği
+            var username = document.getElementById('inputUsername').value;
+            var password = document.getElementById('inputPassword').value;
+
+
+            var rememberMe = document.getElementById('rememberMe').checked;
+            //eğer beni hatırla butonu tikle ise cookilere kaydediyoruz
+            if (rememberMe) {
+                localStorage.setItem('username', username);
+                localStorage.setItem('password', password);
+            } else {
+                // eğer beni hatırla tikli değilse cookiyi temizliyoruz
+                localStorage.removeItem('username');
+                localStorage.removeItem('password');
+            }
+
+
+            $.ajax({
+                type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                url: "/Auth?handler=Login",
+                data: { 'username': username, 'password': password },
+                contentType: 'application/x-www-form-urlencoded',
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status === "200") {
+                        window.location.href = '/?token=' + msg.token;
+                    } else {
+                        alert(msg.error)
+                    }
+                }
+            });
+        })
+
+        var buttonRgstr = document.getElementById('buttonRgstr');
+        //aynı işlemleri register için yapıyoruz
+        buttonRgstr.addEventListener('click', function () { 
+            //burda username ve passwordu alıyoruz userin girdiği
+            var username = document.getElementById('registerUsername').value;
+            var pass = document.getElementById('registerPass').value;
+            var pass2 = document.getElementById('registerPass2').value;
+
+            //burda girilen passlerin eşit olup olmadığını kontrol ediyoruz
+            if (pass !== pass2) {
+                alert("Şifreler eşleşmiyor!")
+                return
+            }
+
+            $.ajax({
+                type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                url: "/Auth?handler=Register",
+                data: { 'username': username, 'password': pass },
+                contentType: 'application/x-www-form-urlencoded',
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status === "200") {
+                        var fileInput = document.getElementById("fileInput");
+                        if (fileInput.files.length > 0) {
+                            uploadPicture(msg.token)
+                        } else {
+                            window.location.href = '/?token=' + msg.token;
+                        }
+                    } else {
+                        alert(msg.error)
+                    }
+                }
+            });
+        })
+    </script>
+
+}
+
+

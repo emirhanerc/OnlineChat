@@ -1,0 +1,8 @@
+﻿ALTER TABLE Users
+ADD PictureID varchar(10) NOT NULL DEFAULT '1';
+SELECT * FROM Users
+SELECT * FROM Chats
+SELECT * FROM Messages
+DELETE FROM Chats
+DELETE FROM Messages
+DELETE FROM Users

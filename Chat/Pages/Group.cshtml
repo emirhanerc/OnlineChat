@@ -1,0 +1,490 @@
+﻿@page
+@model Chat.Pages.GroupModel
+@Html.AntiForgeryToken()
+@{
+}
+
+
+<html>
+    
+<head>
+    <meta charset="utf-8">
+
+
+    <title>Grup oluştur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            background-color: #f4f7f6;
+            margin-top: 20px;
+        }
+
+        .button-5 {
+            align-items: center;
+            background-clip: padding-box;
+            background-color: #fa6400;
+            border: 1px solid transparent;
+            border-radius: .25rem;
+            box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            display: inline-flex;
+            font-family: system-ui, -apple-system, system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            justify-content: center;
+            line-height: 1.25;
+            margin: 0;
+            min-height: 3rem;
+            padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+            position: relative;
+            text-decoration: none;
+            transition: all 250ms;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: baseline;
+            width: auto;
+        }
+
+        .button-5:hover,
+        .button-5:focus {
+            background-color: #fb8332;
+            box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+        }
+
+        .button-5:hover {
+            transform: translateY(-1px);
+        }
+
+        .button-5:active {
+            background-color: #c85000;
+            box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+            transform: translateY(0);
+        }
+
+        .card {
+            background: #fff;
+            transition: .5s;
+            border: 0;
+            margin-bottom: 30px;
+            border-radius: .55rem;
+            position: relative;
+            width: 100%;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+        }
+
+        .chat-app .people-list {
+            width: 280px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            padding: 20px;
+            z-index: 7
+        }
+
+        .chat-app .chat {
+            margin-left: 280px;
+            border-left: 1px solid #eaeaea
+        }
+
+        .people-list {
+            -moz-transition: .5s;
+            -o-transition: .5s;
+            -webkit-transition: .5s;
+            transition: .5s
+        }
+
+        .people-list .chat-list li {
+            padding: 10px 15px;
+            list-style: none;
+            border-radius: 3px
+        }
+
+        .people-list .chat-list li:hover {
+            background: #efefef;
+            cursor: pointer
+        }
+
+        .people-list .chat-list li.active {
+            background: #efefef
+        }
+
+        .people-list .chat-list li .name {
+            font-size: 15px
+        }
+
+        .people-list .chat-list img {
+            width: 45px;
+            border-radius: 50%
+        }
+
+        .people-list img {
+            float: left;
+            border-radius: 50%
+        }
+
+        .people-list .about {
+            float: left;
+            padding-left: 8px
+        }
+
+        .people-list .status {
+            color: #999;
+            font-size: 13px
+        }
+
+        .chat .chat-header {
+            padding: 15px 20px;
+            border-bottom: 2px solid #f4f7f6
+        }
+
+        .chat .chat-header img {
+            float: left;
+            border-radius: 40px;
+            width: 40px
+        }
+
+        .chat .chat-header .chat-about {
+            float: left;
+            padding-left: 10px
+        }
+
+        .chat .chat-history {
+            padding: 20px;
+            border-bottom: 2px solid #fff
+        }
+
+        .chat .chat-history ul {
+            padding: 0
+        }
+
+        .chat .chat-history ul li {
+            list-style: none;
+            margin-bottom: 30px
+        }
+
+        .chat .chat-history ul li:last-child {
+            margin-bottom: 0px
+        }
+
+        .chat .chat-history .message-data {
+            margin-bottom: 15px
+        }
+
+        .chat .chat-history .message-data img {
+            border-radius: 40px;
+            width: 40px
+        }
+
+        .chat .chat-history .message-data-time {
+            color: #434651;
+            padding-left: 6px
+        }
+
+        .chat .chat-history .message {
+            color: #444;
+            padding: 18px 20px;
+            line-height: 26px;
+            font-size: 16px;
+            border-radius: 7px;
+            display: inline-block;
+            position: relative
+        }
+
+        .chat .chat-history .message:after {
+            bottom: 100%;
+            left: 7%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+            border-bottom-color: #fff;
+            border-width: 10px;
+            margin-left: -10px
+        }
+
+        .chat .chat-history .my-message {
+            background: #efefef
+        }
+
+        .chat .chat-history .my-message:after {
+            bottom: 100%;
+            left: 30px;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+            border-bottom-color: #efefef;
+            border-width: 10px;
+            margin-left: -10px
+        }
+
+        .chat .chat-history .other-message {
+            background: #e8f1f3;
+            text-align: right
+        }
+
+        .chat .chat-history .other-message:after {
+            border-bottom-color: #e8f1f3;
+            left: 93%
+        }
+
+        .chat .chat-message {
+            padding: 20px
+        }
+
+        .online,
+        .offline,
+        .me {
+            margin-right: 2px;
+            font-size: 8px;
+            vertical-align: middle
+        }
+
+        .online {
+            color: #86c541
+        }
+
+        .offline {
+            color: #e47297
+        }
+
+        .me {
+            color: #1d8ecd
+        }
+
+        .float-right {
+            float: right
+        }
+
+        .clearfix:after {
+            visibility: hidden;
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+            height: 0
+        }
+
+        @@media only screen and (max-width: 767px) {
+            .chat-app .people-list {
+                height: 465px;
+                width: 100%;
+                overflow-x: auto;
+                background: #fff;
+                left: -400px;
+                display: none
+            }
+
+            .chat-app .people-list.open {
+                left: 0
+            }
+
+            .chat-app .chat {
+                margin: 0
+            }
+
+            .chat-app .chat .chat-header {
+                border-radius: 0.55rem 0.55rem 0 0
+            }
+
+            .chat-app .chat-history {
+                height: 300px;
+                overflow-x: auto
+            }
+        }
+
+        @@media only screen and (min-width: 768px) and (max-width: 992px) {
+            .chat-app .chat-list {
+                height: 650px;
+                overflow-x: auto
+            }
+
+            .chat-app .chat-history {
+                height: 600px;
+                overflow-x: auto
+            }
+        }
+
+        @@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+            .chat-app .chat-list {
+                height: 480px;
+                overflow-x: auto
+            }
+
+            .chat-app .chat-history {
+                height: calc(100vh - 350px);
+                overflow-x: auto
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card chat-app" style="height: 90vh;">
+                    <div id="plist" class="people-list">
+                        <ul id="user-list" class="list-unstyled chat-list mt-2 mb-0">
+                            
+                        </ul>
+                    </div>
+                    <div class="chat">
+                        <div id="type-div" class="chat-message clearfix" style="display:none;">
+                            <div class="input-group mb-0">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-send"></i></span>
+                                </div>
+                                <input id="type-input" type="text" class="form-control" placeholder="Grup adı...">
+                            </div>
+                        </div>
+                        <button id="btn" class="button-5" role="button" style="margin-left: 25vw;" onclick="createChat()">Sohbet oluştur</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        var usersList
+        var selectedUserIndex = []
+
+        if (!token) {
+            window.location.href = "/auth";
+        }
+
+        $.ajax({
+            type: "GET",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            url: "/Index?handler=GetAllUsers",
+            contentType: 'application/x-www-form-urlencoded',
+            dataType: "json",
+            success: function (msg) {
+                if (msg.status === "200") {
+                    setUsersToHtml(JSON.parse(msg.users))
+                } else {
+                    alert(msg.error)
+                }
+            }
+        });
+
+        function setUsersToHtml(users) {
+            me = users.find(u => u.Token === token)
+
+            usersList = users.filter(item => item.Token !== token);
+
+            usersList.reverse()
+
+            for (var i = 0; i < usersList.length; i++) {
+                const user = usersList[i]
+
+                var newDiv = document.createElement("li")
+
+                newDiv.innerHTML = `
+                                        <li id="${i}" class="clearfix" onclick="selectUser(this.id)">
+                                                                <img src="https://bootdey.com/img/Content/avatar/avatar${user.PictureID}.png" alt="avatar">
+                                                <div class="about">
+                                                    <div class="name">${user.Username}</div>
+                                                                            <div class="status"> <i class="fa fa-circle offline"></i>${formatLastOnline(user.LastOnlineAt)}</div>
+                                                </div>
+                                            </li>
+                        `
+
+                var container = document.getElementById("user-list");
+
+                container.appendChild(newDiv);
+            }
+        }
+
+        function selectUser(id) {
+            if (selectedUserIndex.includes(id)) {
+                selectedUserIndex = selectedUserIndex.filter(i => i !== id)
+                document.getElementById(id).style.border = "0px solid #000";
+            } else {
+                selectedUserIndex.push(id)
+                document.getElementById(id).style.border = "2px solid #000";
+            }
+
+            if (selectedUserIndex.length > 1) {
+                document.getElementById("type-div").style.display = "block"
+                document.getElementById("btn").textContent = "Grup oluştur"
+            } else {
+                document.getElementById("type-div").style.display = "none"
+                document.getElementById("btn").textContent = "Sohbet oluştur"
+            }
+        }
+
+
+        function formatLastOnline(csharpDateTimeString) {
+            var jsDate = new Date(csharpDateTimeString);
+            var currentTime = new Date();
+            var timeDifference = currentTime - jsDate;
+            var secondsElapsed = Math.floor(timeDifference / 1000);
+            var minutesElapsed = Math.floor(secondsElapsed / 60);
+            var hoursElapsed = Math.floor(minutesElapsed / 60);
+            var daysElapsed = Math.floor(hoursElapsed / 24);
+
+            if (secondsElapsed < 60) {
+                return secondsElapsed + " saniye önce";
+            } else if (minutesElapsed < 60) {
+                return minutesElapsed + " dakika önce";
+            } else if (hoursElapsed < 24) {
+                return hoursElapsed + " saat önce";
+            } else {
+                return daysElapsed + " gün önce";
+            }
+        }
+
+        function createChat() {
+            var enteredText = document.getElementById('type-input').value;
+            var idsList = [me.Id]
+
+            for (let i = 0; i < selectedUserIndex.length; i++) {
+                const index = selectedUserIndex[i]
+                idsList.push(usersList[index].Id)
+            }
+
+            idsList.sort(function (a, b) {
+                return a - b;
+            });
+
+            var ids = "-" + idsList.join("-") + "-";
+
+            $.ajax({
+                type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                url: "/Group?handler=CreateChat",
+                data: { 'ids': ids, 'name': enteredText },
+                contentType: 'application/x-www-form-urlencoded',
+                dataType: "json",
+                success: function (msg) {
+                    if (msg.status === "200") {
+                        window.location.href="/?token="+token
+                    } else {
+                        alert(msg.error)
+                    }
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
